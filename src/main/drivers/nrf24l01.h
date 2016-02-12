@@ -20,8 +20,6 @@
 
 #pragma once
 
-#include <stdint.h>
-
 // Register map
 enum {
     NRF24L01_00_CONFIG      = 0x00,
@@ -91,7 +89,6 @@ enum TxPower {
     TXPOWER_150mW,
     TXPOWER_LAST,
 };
-
 
 void NRF24L01_Initialize(void);
 int NRF24L01_Reset(void);

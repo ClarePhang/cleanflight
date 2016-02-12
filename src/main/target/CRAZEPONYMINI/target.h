@@ -70,9 +70,11 @@
 #define USE_SPI
 #define USE_SPI_DEVICE_1
 
-#define NRF24_SPI       SPI1
+#define NRF24_SPI_INSTANCE       SPI1
 #define NRF24_CE_GPIO   GPIOA
-#define NRF24_CE_PIN    Pin_12
+#define NRF24_CE_PIN    GPIO_Pin_12
+#define NRF24_CS_GPIO   GPIOA
+#define NRF24_CS_PIN    GPIO_Pin_4
 
 #if (FLASH_SIZE > 64)
 #define BLACKBOX
