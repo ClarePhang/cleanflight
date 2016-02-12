@@ -64,10 +64,15 @@
 
 #define USE_NRF24_RX
 
+// v202 protocol @ 250kbps
+#define NRF24_PROVIDER NRF24RX_V202_250K
+
 #define USE_SPI
 #define USE_SPI_DEVICE_1
 
 #define NRF24_SPI       SPI1
+#define NRF24_CE_GPIO   GPIOA
+#define NRF24_CE_PIN    Pin_12
 
 #if (FLASH_SIZE > 64)
 #define BLACKBOX
