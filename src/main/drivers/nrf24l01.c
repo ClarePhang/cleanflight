@@ -51,9 +51,68 @@
 
 static uint8_t rf_setup;
 
+static void NRF24L01SpiInit(void)
+{
+    static bool hardwareInitialised = false;
+
+    if (hardwareInitialised) {
+        return;
+    }
+
+#ifdef STM32F303xC
+    // CS as output
+    RCC_AHBPeriphClockCmd(NRF24_CS_GPIO_CLK_PERIPHERAL, ENABLE);
+
+    GPIO_InitTypeDef GPIO_InitStructure;
+    GPIO_InitStructure.GPIO_Pin = NRF24_CS_PIN;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+
+    GPIO_Init(NRF24_CS_GPIO, &GPIO_InitStructure);
+    // CE as OUTPUT
+    RCC_AHBPeriphClockCmd(NRF24_CE_GPIO_CLK_PERIPHERAL, ENABLE);
+
+    GPIO_InitStructure.GPIO_Pin = NRF24_CE_PIN;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+
+    GPIO_Init(NRF24_CE_GPIO, &GPIO_InitStructure);
+#endif
+
+#ifdef STM32F10X
+    // CS as output
+    RCC_APB2PeriphClockCmd(NRF24_CS_GPIO_CLK_PERIPHERAL, ENABLE);
+
+    gpio_config_t gpio;
+    gpio.mode = Mode_Out_PP;
+    gpio.pin = NRF24_CS_PIN;
+    gpio.speed = Speed_50MHz;
+
+    gpioInit(NRF24_CS_GPIO, &gpio);
+    // CE as output
+    RCC_APB2PeriphClockCmd(NRF24_CE_GPIO_CLK_PERIPHERAL, ENABLE);
+
+    gpio.mode = Mode_Out_PP;
+    gpio.pin = NRF24_CE_PIN;
+    gpio.speed = Speed_50MHz;
+
+    gpioInit(NRF24_CE_GPIO, &gpio);
+    // TODO: NRF24_IRQ as input
+#endif
+
+    GPIO_SetBits(NRF24_CS_GPIO,   NRF24_CS_PIN);
+
+    spiSetDivisor(NRF24_SPI_INSTANCE, SPI_9MHZ_CLOCK_DIVIDER);
+
+    hardwareInitialised = true;
+}
+
 void NRF24L01_Initialize()
 {
-    spiSetDivisor(NRF24_SPI_INSTANCE, SPI_9MHZ_CLOCK_DIVIDER);  // 9 MHz SPI clock
     rf_setup = 0x0F;
 }
 

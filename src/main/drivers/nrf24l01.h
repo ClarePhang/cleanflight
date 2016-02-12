@@ -90,6 +90,7 @@ enum TxPower {
     TXPOWER_LAST,
 };
 
+static void NRF24L01SpiInit(void);
 void NRF24L01_Initialize(void);
 int NRF24L01_Reset(void);
 uint8_t NRF24L01_WriteReg(uint8_t reg, uint8_t data);
@@ -111,6 +112,4 @@ uint8_t NRF24L01_SetPower(uint8_t power);
 void NRF24L01_SetTxRxMode(enum TXRX_State);
 int NRF24L01_Reset(void);
 
-// To enable radio transmit after WritePayload you need to turn the radio
-//void NRF24L01_PulseCE();
 
