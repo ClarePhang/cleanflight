@@ -457,10 +457,11 @@ CRAZEPONYMINI_SRC = \
 		   drivers/serial_uart.c \
 		   drivers/serial_uart_stm32f10x.c \
 		   drivers/sound_beeper_stm32f10x.c \
-           drivers/bus_spi.c \
+		   drivers/bus_spi.c \
 		   drivers/system_stm32f10x.c \
 		   drivers/timer.c \
 		   drivers/timer_stm32f10x.c \
+		   rx/v202.c \
 		   flight/gtune.c \
 		   blackbox/blackbox.c \
 		   blackbox/blackbox_io.c \
