@@ -15,4 +15,19 @@
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "v202.h"
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdlib.h>
+
+#include <platform.h>
+#include "debug.h"
+
+#include "rx/rx.h"
+#include "rx/v202.h"
+
+#include "drivers/nrf24l01.h"
+
+bool V202ProtocolInit(rxConfig_t *rxConfig, rxRuntimeConfig_t *rxRuntimeConfig, rcReadRawDataPtr *callback) {
+    NRF24L01_SpiInit();
+    return NRF24L01_Reset();
+}

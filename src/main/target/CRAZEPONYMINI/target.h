@@ -39,8 +39,8 @@
 #define GYRO
 #define USE_GYRO_MPU6050
 
-#define MAG
-#define USE_MAG_HMC5883
+//#define MAG
+//#define USE_MAG_HMC5883
 
 #define BRUSHED_MOTORS
 
@@ -62,7 +62,7 @@
 // Since the CrazePony MINI PCB has holes for 4 motors in each corner we can save same flash space by disabling support for other mixers.
 #define USE_QUAD_MIXER_ONLY
 
-#define USE_NRF24_RX
+#define NRF24_RX
 
 // v202 protocol @ 250kbps
 #define NRF24_PROVIDER NRF24RX_V202_250K
@@ -71,6 +71,7 @@
 #define USE_SPI_DEVICE_1
 
 #define NRF24_SPI_INSTANCE       SPI1
+#define USE_NRF24_SPI1
 
 #define NRF24_CE_GPIO   GPIOA
 #define NRF24_CE_PIN    GPIO_Pin_12

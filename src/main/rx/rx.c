@@ -63,7 +63,6 @@ bool spektrumInit(rxConfig_t *rxConfig, rxRuntimeConfig_t *rxRuntimeConfig, rcRe
 bool sumdInit(rxConfig_t *rxConfig, rxRuntimeConfig_t *rxRuntimeConfig, rcReadRawDataPtr *callback);
 bool sumhInit(rxConfig_t *rxConfig, rxRuntimeConfig_t *rxRuntimeConfig, rcReadRawDataPtr *callback);
 bool ibusInit(rxConfig_t *rxConfig, rxRuntimeConfig_t *rxRuntimeConfig, rcReadRawDataPtr *callback);
-bool nrf24Init(rxConfig_t *rxConfig, rxRuntimeConfig_t *rxRuntimeConfig, rcReadRawDataPtr *callback);
 
 void rxMspInit(rxConfig_t *rxConfig, rxRuntimeConfig_t *rxRuntimeConfig, rcReadRawDataPtr *callback);
 
@@ -199,8 +198,31 @@ void rxInit(rxConfig_t *rxConfig, modeActivationCondition_t *modeActivationCondi
         rxPwmInit(&rxRuntimeConfig, &rcReadRawFunc);
     }
 
+#ifdef NRF24_RX
+    if (feature(FEATURE_RX_NRF24)) {
+        rxConfig->nrf24rx_provider = NRF24_PROVIDER;
+        NRF24RxInit(rxConfig);
+    }
+#endif
+
     rxRuntimeConfig.auxChannelCount = rxRuntimeConfig.channelCount - STICK_CHANNEL_COUNT;
 }
+
+#ifdef NRF24_RX
+void NRF24RxInit(rxConfig_t *rxConfig) {
+    bool enabled = false;
+    switch (rxConfig->nrf24rx_provider) {
+        case NRF24RX_V202_250K:
+            enabled = V202ProtocolInit(rxConfig, &rxRuntimeConfig, &rcReadRawFunc);
+            break;
+    }
+
+    if (!enabled) {
+        featureClear(FEATURE_RX_NRF24);
+        rcReadRawFunc = nullReadRawRC;
+    }
+}
+#endif
 
 #ifdef SERIAL_RX
 void serialRxInit(rxConfig_t *rxConfig)
