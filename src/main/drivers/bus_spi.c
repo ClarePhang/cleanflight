@@ -119,6 +119,9 @@ void initSpi1(void)
     // MISO as input
     gpio.pin = SPI1_MISO_PIN;
     gpio.mode = Mode_IN_FLOATING;
+#ifdef USE_NRF24_SPI1
+    gpio.mode = Mode_AF_PP;
+#endif
     gpioInit(GPIOA, &gpio);
 #ifdef SPI1_NSS_PIN
     // NSS as gpio slave select
@@ -139,7 +142,7 @@ void initSpi1(void)
     spi.SPI_CRCPolynomial = 7;
     spi.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8;
     
-#ifdef USE_SDCARD_SPI1
+#if (defined(USE_SDCARD_SPI1) || defined(USE_NRF24_SPI1))
     spi.SPI_CPOL = SPI_CPOL_Low;
     spi.SPI_CPHA = SPI_CPHA_1Edge;
 #else
