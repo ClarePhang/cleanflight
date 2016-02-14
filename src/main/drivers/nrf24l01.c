@@ -51,7 +51,7 @@
 
 static uint8_t rf_setup;
 
-static void NRF24L01SpiInit(void)
+void NRF24L01_SpiInit(void)
 {
     static bool hardwareInitialised = false;
 
@@ -104,7 +104,8 @@ static void NRF24L01SpiInit(void)
     // TODO: NRF24_IRQ as input
 #endif
 
-    GPIO_SetBits(NRF24_CS_GPIO,   NRF24_CS_PIN);
+    DISABLE_NRF24;
+    NRF_24_CE_LOW;
 
     spiSetDivisor(NRF24_SPI_INSTANCE, SPI_9MHZ_CLOCK_DIVIDER);
 
@@ -119,10 +120,19 @@ void NRF24L01_Initialize()
 uint8_t NRF24L01_WriteReg(uint8_t reg, uint8_t data)
 {
     ENABLE_NRF24;
-    uint8_t res = spiTransferByte(NRF24_SPI_INSTANCE, W_REGISTER | (REGISTER_MASK & reg));
+    spiTransferByte(NRF24_SPI_INSTANCE, W_REGISTER | (REGISTER_MASK & reg));
     spiTransferByte(NRF24_SPI_INSTANCE, data);
     DISABLE_NRF24;
-    return res;
+    return true;
+}
+
+uint8_t NRF24L01_ReadReg(uint8_t reg)
+{
+    ENABLE_NRF24;
+    spiTransferByte(NRF24_SPI_INSTANCE, R_REGISTER | (REGISTER_MASK & reg));
+    uint8_t data = spiTransferByte(NRF24_SPI_INSTANCE, 0xFF);
+    DISABLE_NRF24;
+    return data;
 }
 
 uint8_t NRF24L01_WriteRegisterMulti(uint8_t reg, const uint8_t data[], uint8_t length)
@@ -147,15 +157,6 @@ uint8_t NRF24L01_WritePayload(uint8_t *data, uint8_t length)
     }
     DISABLE_NRF24;
     return res;
-}
-
-uint8_t NRF24L01_ReadReg(uint8_t reg)
-{
-    ENABLE_NRF24;
-    spiTransferByte(NRF24_SPI_INSTANCE, R_REGISTER | (REGISTER_MASK & reg));
-    uint8_t data = spiTransferByte(NRF24_SPI_INSTANCE, 0xFF);
-    DISABLE_NRF24;
-    return data;
 }
 
 uint8_t NRF24L01_ReadRegisterMulti(uint8_t reg, uint8_t data[], uint8_t length)
@@ -221,40 +222,12 @@ uint8_t NRF24L01_SetBitrate(uint8_t bitrate)
     return NRF24L01_WriteReg(NRF24L01_06_RF_SETUP, rf_setup);
 }
 
-// Power setting is 0..3 for nRF24L01
-// Claimed power amp for nRF24L01 from eBay is 20dBm.
-//      Raw            w 20dBm PA
-// 0 : -18dBm  (16uW)   2dBm (1.6mW)
-// 1 : -12dBm  (60uW)   8dBm   (6mW)
-// 2 :  -6dBm (250uW)  14dBm  (25mW)
-// 3 :   0dBm   (1mW)  20dBm (100mW)
-// So it maps to Deviation as follows
-/*
-TXPOWER_100uW  = -10dBm
-TXPOWER_300uW  = -5dBm
-TXPOWER_1mW    = 0dBm
-TXPOWER_3mW    = 5dBm
-TXPOWER_10mW   = 10dBm
-TXPOWER_30mW   = 15dBm
-TXPOWER_100mW  = 20dBm
-TXPOWER_150mW  = 22dBm
-*/
 uint8_t NRF24L01_SetPower(uint8_t power)
 {
-    uint8_t nrf_power = 0;
-    switch(power) {
-        case TXPOWER_100uW: nrf_power = 0; break;
-        case TXPOWER_300uW: nrf_power = 0; break;
-        case TXPOWER_1mW:   nrf_power = 0; break;
-        case TXPOWER_3mW:   nrf_power = 1; break;
-        case TXPOWER_10mW:  nrf_power = 1; break;
-        case TXPOWER_30mW:  nrf_power = 2; break;
-        case TXPOWER_100mW: nrf_power = 3; break;
-        case TXPOWER_150mW: nrf_power = 3; break;
-        default:            nrf_power = 0; break;
-    };
+    if(power > 3)
+        power = 3;
     // Power is in range 0..3 for nRF24L01
-    rf_setup = (rf_setup & 0xF9) | ((nrf_power & 0x03) << 1);
+    rf_setup = (rf_setup & 0xF9) | ((power & 0x03) << 1);
     return NRF24L01_WriteReg(NRF24L01_06_RF_SETUP, rf_setup);
 }
 
@@ -289,8 +262,9 @@ void NRF24L01_SetTxRxMode(enum TXRX_State mode)
     }
 }
 
-int NRF24L01_Reset()
+bool NRF24L01_Reset()
 {
     NRF24L01_SetTxRxMode(TXRX_OFF);
     return NRF24L01_ReadReg(0x07) == 0x0E;
 }
+

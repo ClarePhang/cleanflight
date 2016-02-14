@@ -78,21 +78,8 @@ enum TXRX_State {
     RX_EN,
 };
 
-enum TxPower {
-    TXPOWER_100uW,
-    TXPOWER_300uW,
-    TXPOWER_1mW,
-    TXPOWER_3mW,
-    TXPOWER_10mW,
-    TXPOWER_30mW,
-    TXPOWER_100mW,
-    TXPOWER_150mW,
-    TXPOWER_LAST,
-};
-
-static void NRF24L01SpiInit(void);
+void NRF24L01_SpiInit(void);
 void NRF24L01_Initialize(void);
-int NRF24L01_Reset(void);
 uint8_t NRF24L01_WriteReg(uint8_t reg, uint8_t data);
 uint8_t NRF24L01_WriteRegisterMulti(uint8_t reg, const uint8_t data[], uint8_t length);
 uint8_t NRF24L01_WritePayload(uint8_t *data, uint8_t len);
@@ -110,6 +97,6 @@ uint8_t NRF24L01_SetBitrate(uint8_t bitrate);
 
 uint8_t NRF24L01_SetPower(uint8_t power);
 void NRF24L01_SetTxRxMode(enum TXRX_State);
-int NRF24L01_Reset(void);
+bool NRF24L01_Reset(void);
 
 
