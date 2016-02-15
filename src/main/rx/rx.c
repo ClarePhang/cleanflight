@@ -65,6 +65,7 @@ bool sumhInit(rxConfig_t *rxConfig, rxRuntimeConfig_t *rxRuntimeConfig, rcReadRa
 bool ibusInit(rxConfig_t *rxConfig, rxRuntimeConfig_t *rxRuntimeConfig, rcReadRawDataPtr *callback);
 
 void rxMspInit(rxConfig_t *rxConfig, rxRuntimeConfig_t *rxRuntimeConfig, rcReadRawDataPtr *callback);
+void NRF24RxInit(rxConfig_t *rxConfig, rxRuntimeConfig_t *rxRuntimeConfig, rcReadRawDataPtr *callback);
 
 const char rcChannelLetters[] = "AERT12345678abcdefgh";
 
@@ -201,7 +202,7 @@ void rxInit(rxConfig_t *rxConfig, modeActivationCondition_t *modeActivationCondi
 #ifdef NRF24_RX
     if (feature(FEATURE_RX_NRF24)) {
         rxConfig->nrf24rx_provider = NRF24_PROVIDER;
-        NRF24RxInit(rxConfig);
+        NRF24RxInit(rxConfig, &rxRuntimeConfig, &rcReadRawFunc);
     }
 #endif
 
@@ -209,11 +210,12 @@ void rxInit(rxConfig_t *rxConfig, modeActivationCondition_t *modeActivationCondi
 }
 
 #ifdef NRF24_RX
-void NRF24RxInit(rxConfig_t *rxConfig) {
+void NRF24RxInit(rxConfig_t *rxConfig, rxRuntimeConfig_t *rxRuntimeConfig, rcReadRawDataPtr *callback) {
     bool enabled = false;
     switch (rxConfig->nrf24rx_provider) {
         case NRF24RX_V202_250K:
-            enabled = V202ProtocolInit(rxConfig, &rxRuntimeConfig, &rcReadRawFunc);
+            rxRefreshRate = 10000;
+            enabled = v202ProtocolInit(rxConfig, rxRuntimeConfig, callback);
             break;
     }
 
@@ -391,6 +393,16 @@ void updateRx(uint32_t currentTime)
             needRxSignalBefore = currentTime + DELAY_10_HZ;
         }
     }
+
+#ifdef NRF24_RX
+    if (feature(FEATURE_RX_NRF24)) {
+        if(v202DataReceived()) {
+            rxSignalReceived = true;
+            rxIsInFailsafeMode = false;
+            needRxSignalBefore = currentTime + DELAY_10_HZ;
+        }
+    }
+#endif
 
 }
 

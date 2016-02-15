@@ -120,7 +120,7 @@ void initSpi1(void)
     gpio.pin = SPI1_MISO_PIN;
     gpio.mode = Mode_IN_FLOATING;
 #ifdef USE_NRF24_SPI1
-    gpio.mode = Mode_AF_PP;
+    gpio.mode = Mode_AF_OD;
 #endif
     gpioInit(GPIOA, &gpio);
 #ifdef SPI1_NSS_PIN

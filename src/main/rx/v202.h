@@ -17,4 +17,5 @@
 
 #pragma once
 
-bool V202ProtocolInit(rxConfig_t *rxConfig, rxRuntimeConfig_t *rxRuntimeConfig, rcReadRawDataPtr *callback);
+bool v202ProtocolInit(rxConfig_t *rxConfig, rxRuntimeConfig_t *rxRuntimeConfig, rcReadRawDataPtr *callback);
+bool v202DataReceived();
