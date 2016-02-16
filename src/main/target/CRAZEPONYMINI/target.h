@@ -28,7 +28,7 @@
 #define LED1
 #define LED1_PERIPHERAL RCC_APB2Periph_GPIOA
 #define LED2_GPIO GPIOB
-#define LED2_PIN Pin_1 // PB1  (M3 LED)
+#define LED2_PIN (Pin_1 | Pin_3) // PB1  (M3+M4 LED)
 #define LED2
 #define LED2_PERIPHERAL RCC_APB2Periph_GPIOB
 
@@ -38,6 +38,9 @@
 
 #define GYRO
 #define USE_GYRO_MPU6050
+
+//#define BARO
+//#define USE_BARO_MS5611
 
 //#define MAG
 //#define USE_MAG_HMC5883
