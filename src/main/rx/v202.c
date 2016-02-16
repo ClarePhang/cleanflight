@@ -256,8 +256,7 @@ bool v202ProtocolInit(rxConfig_t *rxConfig, rxRuntimeConfig_t *rxRuntimeConfig, 
 {
     UNUSED(rxConfig); // todo: init 250k or 1mbps protocol
     NRF24L01_SpiInit();
-    if(!NRF24L01_Reset())
-        return false;
+    NRF24L01_Reset();
     initV202rx();
     rxRuntimeConfig->channelCount = SUPPORTED_RC_CHANNELS;
     *callback = v202ReadRawRC;
