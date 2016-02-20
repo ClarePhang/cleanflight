@@ -53,6 +53,7 @@
 
 #define USE_ADC
 
+#define BOARD_HAS_VOLTAGE_DIVIDER
 #define VBAT_ADC_GPIO               GPIOB
 #define VBAT_ADC_GPIO_PIN           GPIO_Pin_0
 #define VBAT_ADC_CHANNEL            ADC_Channel_8
