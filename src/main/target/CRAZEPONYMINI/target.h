@@ -51,6 +51,12 @@
 
 #define SERIAL_PORT_COUNT 1
 
+#define USE_ADC
+
+#define VBAT_ADC_GPIO               GPIOB
+#define VBAT_ADC_GPIO_PIN           GPIO_Pin_0
+#define VBAT_ADC_CHANNEL            ADC_Channel_8
+
 #define USE_I2C
 #define I2C_DEVICE (I2CDEV_1)
 
