@@ -278,7 +278,7 @@ void initSpi2(void)
     spi.SPI_FirstBit = SPI_FirstBit_MSB;
     spi.SPI_CRCPolynomial = 7;
 
-#ifdef USE_SDCARD_SPI2
+#if defined (USE_SDCARD_SPI2) || defined(USE_NRF24_SPI2)
     spi.SPI_CPOL = SPI_CPOL_Low;
     spi.SPI_CPHA = SPI_CPHA_1Edge;
 #else
