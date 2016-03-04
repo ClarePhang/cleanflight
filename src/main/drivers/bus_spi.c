@@ -254,6 +254,9 @@ void initSpi2(void)
     // MISO as input
     gpio.pin = SPI2_MISO_PIN;
     gpio.mode = Mode_IN_FLOATING;
+#ifdef USE_NRF24_SPI2
+    gpio.mode = Mode_AF_OD;
+#endif
     gpioInit(SPI2_GPIO, &gpio);
 
 #ifdef SPI2_NSS_PIN
