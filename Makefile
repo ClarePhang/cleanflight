@@ -423,9 +423,11 @@ CJMCU_SRC = \
 		   drivers/accgyro_mpu.c \
 		   drivers/accgyro_mpu6050.c \
 		   drivers/bus_i2c_stm32f10x.c \
+		   drivers/bus_spi.c \
 		   drivers/compass_hmc5883l.c \
 		   drivers/gpio_stm32f10x.c \
 		   drivers/light_led_stm32f10x.c \
+		   drivers/nrf24l01.c \
 		   drivers/pwm_mapping.c \
 		   drivers/pwm_output.c \
 		   drivers/pwm_rx.c \
@@ -436,6 +438,7 @@ CJMCU_SRC = \
 		   drivers/timer.c \
 		   drivers/timer_stm32f10x.c \
 		   hardware_revision.c \
+		   rx/v202.c \
 		   flight/gtune.c \
 		   blackbox/blackbox.c \
 		   blackbox/blackbox_io.c \
